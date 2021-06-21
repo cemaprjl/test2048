@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc61f2f08a25ab34497300fb8c895b57, type: 3}
+  m_Name: CubeSettings
+  m_EditorClassIdentifier: 
+  Items:
+  - Texture: {fileID: 2800000, guid: fb1adcaf75079354387dfdeb65f56b50, type: 3}
+    Material: {fileID: 2100000, guid: 59ea5cbc542ecd042b7ba150ae9f9ede, type: 2}
+    Index: 1
+  - Texture: {fileID: 2800000, guid: 517af2c4b6984ef4e8779c617dc359c8, type: 3}
+    Material: {fileID: 2100000, guid: 9c6ea39c612f29647894f0b0847de4c9, type: 2}
+    Index: 2
+  - Texture: {fileID: 2800000, guid: 4ab6ddfb7fd36de4ab468e58f79dc3f3, type: 3}
+    Material: {fileID: 2100000, guid: 8ca0518a02a4b9a4690bf9971eaf12f5, type: 2}
+    Index: 3
+  - Texture: {fileID: 2800000, guid: c2fc776052dbaee49ab1c7abc5334f80, type: 3}
+    Material: {fileID: 2100000, guid: aa0ebadc8670de74a992c48ef2a39fc2, type: 2}
+    Index: 4
+  - Texture: {fileID: 2800000, guid: 779220d15a33d4e4ab9c459411b15290, type: 3}
+    Material: {fileID: 2100000, guid: a725c08f11f29534db3abe26d46c6ba6, type: 2}
+    Index: 5
+  - Texture: {fileID: 2800000, guid: e05505897ec7f214484aa3af3d735d65, type: 3}
+    Material: {fileID: 2100000, guid: 95247c8c425cfab4ca16a8eea33d64c2, type: 2}
+    Index: 6
+  - Texture: {fileID: 2800000, guid: d2de0ca9ffac05941a5054447017baa5, type: 3}
+    Material: {fileID: 2100000, guid: 017782d1e78d7f14bb2d4a5857044368, type: 2}
+    Index: 7
+  - Texture: {fileID: 2800000, guid: 7d98f55fda18e124c94c91fed365b2db, type: 3}
+    Material: {fileID: 2100000, guid: 579aab589b63a744cb4ef2622d744578, type: 2}
+    Index: 8
+  - Texture: {fileID: 2800000, guid: 4d53d259467b082469a8bec5cfb9ca0a, type: 3}
+    Material: {fileID: 2100000, guid: 0f06771b62621ad4c870ae4899e34a12, type: 2}
+    Index: 9
+  - Texture: {fileID: 2800000, guid: 38db7182a495c2b4681dea4ae895a132, type: 3}
+    Material: {fileID: 2100000, guid: 5bea04de7a26b184d98cd28000f0221a, type: 2}
+    Index: 10
+  - Texture: {fileID: 2800000, guid: 3ed232d9330c63b4f87225b3d2c9aa57, type: 3}
+    Material: {fileID: 2100000, guid: b6fa95d0f5282984a8709ceef37dc5c6, type: 2}
+    Index: 11
