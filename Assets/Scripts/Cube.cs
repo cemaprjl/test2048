@@ -8,6 +8,7 @@ public class Cube : MonoBehaviour
     public delegate void OnChangeCube(Cube target);
     public event OnChangeCube OnDestroyedEvent;
     public event OnChangeCube OnGrowEvent;
+    public event OnChangeCube OnWinEvent;
     
     public CubeSettings Settings;
 //    [Range(0, 11)]
@@ -76,7 +77,7 @@ public class Cube : MonoBehaviour
         }
         if (other.gameObject.layer == 6)
         {
-            Debug.Log("GAME OVER");
+            // gameover
             return;
         }
         var otherCube = other.gameObject.GetComponent<Cube>();
@@ -98,16 +99,25 @@ public class Cube : MonoBehaviour
     private void JoinComplete(JoinAnimation component)
     {
         Destroy(component);
-        transform.localScale = Vector3.one; 
+        transform.localScale = Vector3.one;
+        if (_value == 10)
+        {
+            OnWinEvent?.Invoke(this);
+            gameObject.AddComponent<WinAnimation>().Play(WinAnimComplete);
+            return;
+        }
         EnablePhysics(true);
         IsBusy = false;
         rigBody.AddForce(_tmpForce + Vector3.up, ForceMode.Impulse);
-//        rigBody.AddForce((Vector3.up * 1f + Vector3.forward * 3f), ForceMode.Impulse);
-        
         OnGrowEvent?.Invoke(this);
     }
 
-    
+    private void WinAnimComplete(WinAnimation component)
+    {
+        Destroy(component);
+    }
+
+
     private void DestroyCube()
     {
         EnablePhysics(false);
