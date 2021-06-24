@@ -9,6 +9,7 @@ public class Cube : MonoBehaviour
     public event OnChangeCube OnDestroyedEvent;
     public event OnChangeCube OnGrowEvent;
     public event OnChangeCube OnWinEvent;
+    public event OnChangeCube OnLooseEvent;
     
     public CubeSettings Settings;
 //    [Range(0, 11)]
@@ -77,7 +78,7 @@ public class Cube : MonoBehaviour
         }
         if (other.gameObject.layer == 6)
         {
-            // gameover
+            OnLooseEvent?.Invoke(this);
             return;
         }
         var otherCube = other.gameObject.GetComponent<Cube>();
@@ -87,10 +88,17 @@ public class Cube : MonoBehaviour
             {
                 IsBusy = true;
                 otherCube.IsBusy = true;
-                SetValue(_value + 1);
+                otherCube.DestroyCube();
                 _tmpForce = rigBody.GetPointVelocity(transform.position);
                 EnablePhysics(false);
-                otherCube.DestroyCube();
+                SetValue(_value + 1);
+                if (_value == 10)
+                {
+                    OnWinEvent?.Invoke(this);
+                    gameObject.AddComponent<WinAnimation>().Play(WinAnimComplete);
+                    gameObject.AddComponent<RotateAnimation>().Play();
+                    return;
+                }
                 gameObject.AddComponent<JoinAnimation>().Play(JoinComplete);
             }
         }
@@ -100,12 +108,13 @@ public class Cube : MonoBehaviour
     {
         Destroy(component);
         transform.localScale = Vector3.one;
-        if (_value == 10)
-        {
-            OnWinEvent?.Invoke(this);
-            gameObject.AddComponent<WinAnimation>().Play(WinAnimComplete);
-            return;
-        }
+//        if (_value == 10)
+//        {
+//            OnWinEvent?.Invoke(this);
+//            gameObject.AddComponent<WinAnimation>().Play(WinAnimComplete);
+//            gameObject.AddComponent<RotateAnimation>().Play();
+//            return;
+//        }
         EnablePhysics(true);
         IsBusy = false;
         rigBody.AddForce(_tmpForce + Vector3.up, ForceMode.Impulse);

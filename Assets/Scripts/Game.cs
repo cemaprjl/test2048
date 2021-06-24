@@ -67,7 +67,6 @@ public class Game : MonoBehaviour
         {
             return;
         }
-        Debug.Log(position);
         var pos = _bulletCube.transform.localPosition;
         pos.x = -PointToPosition(position.x) * _boxStep * 4f;
         pos.x = Mathf.Clamp(pos.x, _targetLeft.x, _targetRight.x);

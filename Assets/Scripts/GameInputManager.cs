@@ -5,7 +5,7 @@ using UnityEngine.InputSystem.EnhancedTouch;
 
 public class GameInputManager : MonoBehaviour
 {
-    private TouchControls _touchControls;
+    private GameInputActions _touchControls;
     public delegate void TouchEvent(Vector2 position);
     public event TouchEvent OnDrag;
     public event TouchEvent OnTap;
@@ -16,7 +16,7 @@ public class GameInputManager : MonoBehaviour
 
     void Awake()
     {
-        _touchControls = new TouchControls();
+        _touchControls = new GameInputActions();
     }
 
     private void OnEnable()
@@ -34,12 +34,12 @@ public class GameInputManager : MonoBehaviour
 
     private void Start()
     {
-        _touchControls.Touch.TouchContact.started += context => Touched(context);
-        _touchControls.Touch.TouchContact.canceled += context => UnTouched(context);
+        _touchControls.Player.TouchContact.started += context => Touched(context);
+        _touchControls.Player.TouchContact.canceled += context => UnTouched(context);
 //        _touchControls.Touch.TouchInput.performed += context => ActionChecker(context);
 //        _touchControls.Touch.MouseMove.started += context => Moved(context);
 //        _touchControls.Touch.MouseMove.canceled += context => ActionChecker(context);
-        _touchControls.Touch.MouseMove.performed += context => Moved(context);
+        _touchControls.Player.Move.performed += context => Moved(context);
     }
 
   
