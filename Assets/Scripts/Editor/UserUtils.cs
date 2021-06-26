@@ -49,7 +49,7 @@ public class UserUtils : Editor
 //	}
 
     [MenuItem("User Utils/Create/Cube Settings")]
-    static void CreateStagesSettings()
+    static void CreateCubeSettings()
     {
         createScriptableObject<CubeSettings>();
     }

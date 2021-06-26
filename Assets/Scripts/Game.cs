@@ -7,73 +7,39 @@ using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
 {
-//    [SerializeField]
-//    private Cube ShootCube;
 
+    #region properties
     public Vector3 Force = Vector3.back * 100f;
     public Pool CubesPool;
-
     public Transform CubesContainer;
     public Transform ShotPost;
-    public Transform WinUI;
+    
     public Text WinScore;
-
+    public Text ScoreTF;
+    
+    public UIController ui;
+    
     [Range(0, 6)]
     public int RowsCount = 3; 
     
-    private float _boxStep = 1.2f;
-    private Cube _bulletCube;
+    private bool _listenTouch = false;
 
+    private int _maxCubeValue = 1;
+    private int _score = 0;
+    private int _moves = 0;
+    private float _boxStep = 1.2f;
+    private int _screenWidth;
+    private Cube _bulletCube;
+    private bool _initializedGame = false;
+    
     private Vector3 _targetLeft;
     private Vector3 _targetRight;
     private Vector3 _сurrentPosition;
-    private bool isLeftDirection = true;
-    private Coroutine _waitCoroutine;
-    [SerializeField] private float Speed = 100f;
 
     public GameInputManager Input;
 
-    private bool listenTouch = false;
-
-    private int maxValue = 1;
-    private int score = 0;
-    private int moves = 0;
-
-    public Text ScoreTF;
-
-    private Camera _cam;
-    private int _screenWidth;
-
-    private void Start()
-    {
-        _cam = Camera.main;
-        _screenWidth = Screen.width;
-        _targetLeft = Vector3.left * _boxStep * 2f;
-        _targetRight = Vector3.right * _boxStep * 2f;
-        _сurrentPosition = Vector3.zero;
-        WinUI.gameObject.SetActive(false);
-        InitGame();
-    }
-
-
-    private float PointToPosition(float source)
-    {
-        return source / _screenWidth - 0.5f;
-    }
+    #endregion
     
-    private void MoveCube(Vector2 position)
-    {
-        if (!listenTouch)
-        {
-            return;
-        }
-        var pos = _bulletCube.transform.localPosition;
-        pos.x = -PointToPosition(position.x) * _boxStep * 4f;
-        pos.x = Mathf.Clamp(pos.x, _targetLeft.x, _targetRight.x);
-        _bulletCube.transform.localPosition = pos;
-        _сurrentPosition = pos;
-    }
-
     private void OnEnable()
     {
         Input.OnDrag += MoveCube;
@@ -84,25 +50,64 @@ public class Game : MonoBehaviour
     {
         Input.OnDrag -= MoveCube;
         Input.OnUntap -= Shoot;
+    }   
+    private void Start()
+    {
+        _screenWidth = Screen.width;
+        _targetLeft = Vector3.left * _boxStep * 2f;
+        _targetRight = Vector3.right * _boxStep * 2f;
+        _сurrentPosition = Vector3.zero;
+        InitGame();
+    }
+    public void RestartGame()
+    {
+        if (!_initializedGame)
+        {
+            InitGame();
+        }
+        ui.SetState(GameState.Play);
+        _listenTouch = true;
     }
 
     private void InitGame()
     {
-        moves = 0;
-        score = 0;
+        _moves = 0;
+        _score = 0;
+        _maxCubeValue = 2;
         CubesContainer.DestroyChildren(true);
         for (int i = 0; i < RowsCount; i++)
         {
             CreateRow(_boxStep * i);
         }
-
+        _initializedGame = true;
         AddBulletCube();
         UpdateScore();
     }
 
+
+    private float PointToPosition(float source)
+    {
+        return source / _screenWidth - 0.5f;
+    }
+    
+    private void MoveCube(Vector2 position)
+    {
+        if (!_listenTouch)
+        {
+            return;
+        }
+        var pos = _bulletCube.transform.localPosition;
+        pos.x = -PointToPosition(position.x) * _boxStep * 4f;
+        pos.x = Mathf.Clamp(pos.x, _targetLeft.x, _targetRight.x);
+        _bulletCube.transform.localPosition = pos;
+        _сurrentPosition = pos;
+    }
+
+
+
     private void UpdateScore()
     {
-        ScoreTF.text = $"Score: {score}\nMoves: {moves}";
+        ScoreTF.text = $"Score: {_score}\nMoves: {_moves}";
     }
 
     private void AddBulletCube()
@@ -110,7 +115,7 @@ public class Game : MonoBehaviour
         if (_bulletCube != null)
         {
             //allow to the launched cube collide with the game over area 
-            _bulletCube.gameObject.layer = 8;
+            _bulletCube.gameObject.layer = (int)CollisionLayers.Cube;
         }
         ShotPost.DestroyChildren(true);
         _bulletCube = CubesPool.GetItem<Cube>();
@@ -118,19 +123,25 @@ public class Game : MonoBehaviour
         _bulletCube.EnablePhysics(false);
         _bulletCube.transform.SetParent(ShotPost);
         _bulletCube.transform.localPosition = _сurrentPosition;
-        _bulletCube.SetValue(Random.Range(0, maxValue));
+        _bulletCube.SetValue(Random.Range(0, _maxCubeValue));
         _bulletCube.OnDestroyedEvent += OnDestroyCube;
         _bulletCube.OnGrowEvent += OnGrowCube;
         _bulletCube.OnWinEvent += OnWin;
-        _bulletCube.gameObject.layer = 7;
+        _bulletCube.OnLooseEvent += OnLoose;
+        _bulletCube.gameObject.layer = (int)CollisionLayers.Bullet;
         
-        listenTouch = true;
+        _listenTouch = true;
     }
 
     private void OnWin(Cube target)
     {
-        WinUI.gameObject.SetActive(true);
-        WinScore.text = $"Score: {score}\nMoves: {moves}";
+        ui.SetState(GameState.Win);
+        WinScore.text = $"Score: {_score}\nMoves: {_moves}";
+    }
+    
+    private void OnLoose(Cube target)
+    {
+        ui.SetState(GameState.Loose);
     }
 
     private void CreateRow(float pos)
@@ -148,16 +159,18 @@ public class Game : MonoBehaviour
         cube.transform.SetParent(CubesContainer);
         cube.transform.localPosition = position;
 
-        cube.SetValue(Random.Range(0, 3));
+        cube.SetValue(Random.Range(0, _maxCubeValue));
         cube.OnDestroyedEvent += OnDestroyCube;
         cube.OnGrowEvent += OnGrowCube;
-        cube.gameObject.layer = 8;
+        cube.OnWinEvent += OnWin;
+        cube.OnLooseEvent += OnLoose;
+        cube.gameObject.layer = (int)CollisionLayers.Cube;
     }
 
     private void OnGrowCube(Cube target)
     {
-        maxValue = Math.Max(target.Val, maxValue);
-        score += target.Score;
+        _maxCubeValue = Math.Max(target.Val, _maxCubeValue);
+        _score += target.Score;
         UpdateScore();
     }
 
@@ -165,6 +178,8 @@ public class Game : MonoBehaviour
     {
         target.OnDestroyedEvent -= OnDestroyCube;
         target.OnGrowEvent -= OnGrowCube;
+        target.OnWinEvent -= OnWin;
+        target.OnLooseEvent -= OnLoose;
         target.transform.localScale = Vector3.one;
         CubesPool.ReturnItem(target.gameObject);
     }
@@ -172,12 +187,16 @@ public class Game : MonoBehaviour
 
     private void Shoot(Vector2 position)
     {
-        if (!listenTouch)
+        
+        Debug.Log($"SHOOT {ui.CurrentState}, listenTouch {_listenTouch}");
+        
+        if (!_listenTouch || ui.CurrentState != GameState.Play)
         {
             return;
         }
-        listenTouch = false;
-
+        _listenTouch = false;
+        _initializedGame = false;
+        
         var newPosition = _bulletCube.transform.localPosition;
         newPosition.x = -PointToPosition(position.x) * _boxStep * 4f;
         _bulletCube.transform.localPosition = newPosition;
@@ -187,10 +206,12 @@ public class Game : MonoBehaviour
         _bulletCube.EnablePhysics(true);
         _bulletCube.Shoot(Force);
 
-        moves += 1;
+        _moves += 1;
         UpdateScore();
         
-        _waitCoroutine = StartCoroutine(WaitFor(1f, AddBulletCube));
+        StartCoroutine(WaitFor(1f, AddBulletCube));
+
+        
     }
 
     private IEnumerator WaitFor(float time, Action callback = null)
@@ -199,4 +220,6 @@ public class Game : MonoBehaviour
         callback?.Invoke();
     }
 
+    
+    
 }

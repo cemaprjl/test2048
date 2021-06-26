@@ -42,7 +42,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""path"": ""<Touchscreen>/press"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""mobile"",
                     ""action"": ""TouchContact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -53,7 +53,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""path"": ""<Mouse>/press"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Desktop"",
                     ""action"": ""TouchContact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -64,7 +64,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Desktop"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -75,7 +75,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""mobile"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -83,7 +83,30 @@ public class @GameInputActions : IInputActionCollection, IDisposable
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""mobile"",
+            ""bindingGroup"": ""mobile"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Touchscreen>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Desktop"",
+            ""bindingGroup"": ""Desktop"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
@@ -175,6 +198,24 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+    private int m_mobileSchemeIndex = -1;
+    public InputControlScheme mobileScheme
+    {
+        get
+        {
+            if (m_mobileSchemeIndex == -1) m_mobileSchemeIndex = asset.FindControlSchemeIndex("mobile");
+            return asset.controlSchemes[m_mobileSchemeIndex];
+        }
+    }
+    private int m_DesktopSchemeIndex = -1;
+    public InputControlScheme DesktopScheme
+    {
+        get
+        {
+            if (m_DesktopSchemeIndex == -1) m_DesktopSchemeIndex = asset.FindControlSchemeIndex("Desktop");
+            return asset.controlSchemes[m_DesktopSchemeIndex];
+        }
+    }
     public interface IPlayerActions
     {
         void OnTouchContact(InputAction.CallbackContext context);

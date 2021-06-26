@@ -29,7 +29,7 @@
                     "path": "<Touchscreen>/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "mobile",
                     "action": "TouchContact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -40,7 +40,7 @@
                     "path": "<Mouse>/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Desktop",
                     "action": "TouchContact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -51,7 +51,7 @@
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Desktop",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -62,7 +62,7 @@
                     "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "mobile",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -70,5 +70,28 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "mobile",
+            "bindingGroup": "mobile",
+            "devices": [
+                {
+                    "devicePath": "<Touchscreen>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Desktop",
+            "bindingGroup": "Desktop",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

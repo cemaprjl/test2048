@@ -15,7 +15,7 @@
                 },
                 {
                     "name": "Click",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "e008f5cd-1d3c-40a7-88f6-0baa7e0eb0a4",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -29,7 +29,7 @@
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "desktop",
                     "action": "Point",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -40,7 +40,7 @@
                     "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "mobile",
                     "action": "Point",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -51,7 +51,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "desktop",
                     "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -62,7 +62,7 @@
                     "path": "<Touchscreen>/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "mobile",
                     "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -70,5 +70,28 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "mobile",
+            "bindingGroup": "mobile",
+            "devices": [
+                {
+                    "devicePath": "<Touchscreen>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "desktop",
+            "bindingGroup": "desktop",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

@@ -14,6 +14,13 @@ public class GameInputManager : MonoBehaviour
     private bool _pressed = false;
     private Coroutine _check;
 
+#if UNITY_EDITOR
+    private ControlScheme _scheme = ControlScheme.editor;
+#elif UNITY_ANDROID
+    private ControlScheme _scheme = ControlScheme.android;
+#endif
+    
+    
     void Awake()
     {
         _touchControls = new GameInputActions();
@@ -36,9 +43,6 @@ public class GameInputManager : MonoBehaviour
     {
         _touchControls.Player.TouchContact.started += context => Touched(context);
         _touchControls.Player.TouchContact.canceled += context => UnTouched(context);
-//        _touchControls.Touch.TouchInput.performed += context => ActionChecker(context);
-//        _touchControls.Touch.MouseMove.started += context => Moved(context);
-//        _touchControls.Touch.MouseMove.canceled += context => ActionChecker(context);
         _touchControls.Player.Move.performed += context => Moved(context);
     }
 
@@ -48,7 +52,6 @@ public class GameInputManager : MonoBehaviour
     {
         if(_pressed) 
         {
-//            Debug.Log("MOVE " + context.ReadValue<Vector2>());
             OnDrag?.Invoke(context.ReadValue<Vector2>());
         }
     }
@@ -56,15 +59,38 @@ public class GameInputManager : MonoBehaviour
     private void UnTouched(InputAction.CallbackContext context)
     {
         _pressed = false;
-        var f = Touchscreen.current.primaryTouch.position.ReadValue();
-        OnUntap?.Invoke(f);
+        var pos = Vector2.zero;
+        if (_scheme == ControlScheme.android)
+        {
+            pos = Touchscreen.current.primaryTouch.position.ReadValue();
+        }
+        else 
+        {
+            pos = Mouse.current.position.ReadValue();            
+        }
+
+        OnUntap?.Invoke(pos);
     }
 
     private void Touched(InputAction.CallbackContext context)
     {
         _pressed = true;
-        var f = Touchscreen.current.primaryTouch.position.ReadValue();
-        OnTap?.Invoke(f);
+        var pos = Vector2.zero;
+        if (_scheme == ControlScheme.android)
+        {
+            pos = Touchscreen.current.primaryTouch.position.ReadValue();
+        }
+        else 
+        {
+            pos = Mouse.current.position.ReadValue();            
+        }
+        OnTap?.Invoke(pos);
     }
 
+}
+
+
+public enum ControlScheme {
+    editor,
+    android
 }

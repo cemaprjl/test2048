@@ -17,7 +17,6 @@ public class Cube : MonoBehaviour
     [Range(0, 11)]
     private int _value;
     private int _validatedValue = -100;
-
     public int Val
     {
         get => _value;
@@ -76,7 +75,7 @@ public class Cube : MonoBehaviour
         {
             return;
         }
-        if (other.gameObject.layer == 6)
+        if (other.gameObject.layer == (int)CollisionLayers.GameOver)
         {
             OnLooseEvent?.Invoke(this);
             return;
@@ -108,13 +107,6 @@ public class Cube : MonoBehaviour
     {
         Destroy(component);
         transform.localScale = Vector3.one;
-//        if (_value == 10)
-//        {
-//            OnWinEvent?.Invoke(this);
-//            gameObject.AddComponent<WinAnimation>().Play(WinAnimComplete);
-//            gameObject.AddComponent<RotateAnimation>().Play();
-//            return;
-//        }
         EnablePhysics(true);
         IsBusy = false;
         rigBody.AddForce(_tmpForce + Vector3.up, ForceMode.Impulse);
