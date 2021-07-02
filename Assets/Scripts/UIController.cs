@@ -30,12 +30,3 @@ public class UIController : MonoBehaviour
     }
 
 }
-
-public enum GameState
-{
-    Lobby,
-    Play,
-    Win,
-    Loose
-}
-

@@ -996,7 +996,7 @@ GameObject:
   - component: {fileID: 884389436}
   - component: {fileID: 884389435}
   - component: {fileID: 884389434}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: GameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
